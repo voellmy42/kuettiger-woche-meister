@@ -2,10 +2,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2 } from "lucide-react";
-import { ImageGallery } from "@/components/ImageGallery";
-import { LocationMap } from "@/components/LocationMap";
-import { PullQuote } from "@/components/PullQuote";
-import { CommentSection } from "@/components/CommentSection";
 
 interface ArticleCardProps {
   id: string;
@@ -16,12 +12,6 @@ interface ArticleCardProps {
   metadata?: string;
   isRead?: boolean;
   onReadChange?: (id: string, isRead: boolean) => void;
-  images?: string[];
-  location?: string;
-  locationAddress?: string;
-  pullQuote?: string;
-  pullQuoteAuthor?: string;
-  enableComments?: boolean;
 }
 
 export const ArticleCard = ({ 
@@ -32,13 +22,7 @@ export const ArticleCard = ({
   isLead = false,
   metadata,
   isRead = false,
-  onReadChange,
-  images,
-  location,
-  locationAddress,
-  pullQuote,
-  pullQuoteAuthor,
-  enableComments = false
+  onReadChange
 }: ArticleCardProps) => {
   return (
     <Card className={`overflow-hidden transition-all hover:shadow-lg ${
@@ -81,27 +65,11 @@ export const ArticleCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        {images && images.length > 0 && (
-          <ImageGallery images={images} alt={title} />
-        )}
-        
         <div className="prose prose-gray max-w-none">
           {content.split('\n').map((paragraph, idx) => (
             paragraph.trim() && <p key={idx} className="mb-3 leading-relaxed text-foreground/90">{paragraph}</p>
           ))}
         </div>
-
-        {pullQuote && (
-          <PullQuote text={pullQuote} author={pullQuoteAuthor} />
-        )}
-
-        {location && (
-          <LocationMap location={location} address={locationAddress} />
-        )}
-
-        {enableComments && (
-          <CommentSection articleId={id} />
-        )}
       </CardContent>
     </Card>
   );
