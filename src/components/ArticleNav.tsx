@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ArticleNavProps {
   activeCategory: string;
@@ -19,7 +21,27 @@ export const ArticleNav = ({ activeCategory, onCategoryChange, unreadCounts }: A
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border mb-8">
       <div className="container mx-auto px-4">
-        <div className="flex items-center gap-2 py-4 overflow-x-auto">
+        {/* Mobile: dropdown + clear link, no horizontal scroll */}
+        <div className="py-3 sm:hidden">
+          <div className="grid grid-cols-2 gap-2">
+            <Select value={activeCategory} onValueChange={onCategoryChange}>
+              <SelectTrigger aria-label="Kategorie wählen">
+                <SelectValue placeholder="Kategorie" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id}>{cat.label}{unreadCounts[cat.id] ? ` (${unreadCounts[cat.id]})` : ""}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Link to="/info">
+              <Button variant="secondary" className="w-full">Infos & Termine</Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Desktop/tablet: wrapped buttons, no horizontal scroll */}
+        <div className="hidden sm:flex items-center gap-2 py-4 flex-wrap">
           {categories.map((cat) => {
             const isActive = activeCategory === cat.id;
             const count = unreadCounts[cat.id] || 0;
@@ -51,6 +73,9 @@ export const ArticleNav = ({ activeCategory, onCategoryChange, unreadCounts }: A
               </Button>
             );
           })}
+          <Link to="/info">
+            <Button variant="secondary" className="whitespace-nowrap">Infos & Termine</Button>
+          </Link>
         </div>
       </div>
     </nav>

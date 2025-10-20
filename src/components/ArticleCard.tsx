@@ -29,21 +29,21 @@ export const ArticleCard = ({
       isLead ? 'border-l-4 border-l-accent' : ''
     } ${isRead ? 'opacity-60' : ''}`}>
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1">
+        <div className="flex items-start justify-between gap-3 flex-col sm:flex-row">
+          <div className="flex-1 min-w-0 w-full max-w-full">
             {category && (
               <Badge variant="secondary" className="w-fit mb-2 text-xs font-semibold uppercase tracking-wide">
                 {category}
               </Badge>
             )}
-            <h2 className={`${isLead ? 'text-3xl md:text-4xl' : 'text-2xl'} font-bold leading-tight`}>
+            <h2 className={`${isLead ? 'text-3xl md:text-4xl' : 'text-2xl'} font-bold leading-tight break-words` }>
               {title}
             </h2>
             {metadata && (
               <p className="text-sm text-muted-foreground mt-2">{metadata}</p>
             )}
           </div>
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2 pt-1 shrink-0 w-full sm:w-auto">
             <label className="flex items-center gap-2 cursor-pointer group">
               <Checkbox
                 checked={isRead}
@@ -65,7 +65,7 @@ export const ArticleCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-gray max-w-none">
+        <div className="prose prose-gray max-w-none break-words hyphens-auto">
           {content.split('\n').map((paragraph, idx) => (
             paragraph.trim() && <p key={idx} className="mb-3 leading-relaxed text-foreground/90">{paragraph}</p>
           ))}

@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Clock, MapPin, Users, Trash2, Zap, Music, Home } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Trash2, Zap, Home } from "lucide-react";
 
 interface Event {
   id: string;
@@ -214,19 +213,6 @@ const getTypeColor = (type: string) => {
 
 export const AdvancedEventCalendar = ({ events = defaultEvents }: AdvancedEventCalendarProps) => {
   const [activeTab, setActiveTab] = useState("all");
-  const [selectedDate, setSelectedDate] = useState<string>("");
-
-  // Get next 30 days
-  const upcomingDates = useMemo(() => {
-    const dates = [];
-    const today = new Date();
-    for (let i = 0; i < 30; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      dates.push(date.toISOString().split('T')[0]);
-    }
-    return dates;
-  }, []);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -235,16 +221,12 @@ export const AdvancedEventCalendar = ({ events = defaultEvents }: AdvancedEventC
       filtered = filtered.filter(event => event.type === activeTab);
     }
     
-    if (selectedDate) {
-      filtered = filtered.filter(event => event.date === selectedDate);
-    }
-    
     return filtered.sort((a, b) => {
       const dateA = new Date(a.date + 'T' + (a.time.split('-')[0] || a.time));
       const dateB = new Date(b.date + 'T' + (b.time.split('-')[0] || b.time));
       return dateA.getTime() - dateB.getTime();
     });
-  }, [events, activeTab, selectedDate]);
+  }, [events, activeTab]);
 
   const eventsByDate = useMemo(() => {
     const grouped: Record<string, Event[]> = {};
@@ -256,15 +238,6 @@ export const AdvancedEventCalendar = ({ events = defaultEvents }: AdvancedEventC
     });
     return grouped;
   }, [filteredEvents]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('de-CH', { 
-      weekday: 'short', 
-      day: 'numeric', 
-      month: 'short' 
-    });
-  };
 
   const formatFullDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -297,31 +270,308 @@ export const AdvancedEventCalendar = ({ events = defaultEvents }: AdvancedEventC
             <TabsTrigger value="service">Service</TabsTrigger>
           </TabsList>
 
-          <TabsContent value={activeTab} className="mt-4">
+          <TabsContent value="all" className="mt-4">
             <div className="space-y-4">
-              {/* Date Selector */}
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {upcomingDates.slice(0, 14).map((date) => (
-                  <Button
-                    key={date}
-                    variant={selectedDate === date ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedDate(selectedDate === date ? "" : date)}
-                    className="whitespace-nowrap"
-                  >
-                    {formatDate(date)}
-                  </Button>
-                ))}
-                <Button
-                  variant={selectedDate === "" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedDate("")}
-                  className="whitespace-nowrap"
-                >
-                  Alle
-                </Button>
-              </div>
+              {/* Events List */}
+              {Object.keys(eventsByDate).length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Keine Termine für diesen Zeitraum gefunden.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(eventsByDate).map(([date, dayEvents]) => (
+                    <div key={date} className="border border-gray-200 rounded-lg p-4 bg-white">
+                      <h3 className="font-semibold text-lg mb-3 text-gray-900 flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-primary" />
+                        {formatFullDate(date)}
+                        <Badge variant="outline" className="ml-auto">
+                          {dayEvents.length} Termin{dayEvents.length !== 1 ? 'e' : ''}
+                        </Badge>
+                      </h3>
+                      
+                      <div className="space-y-3">
+                        {dayEvents.map((event) => (
+                          <div key={event.id} className="border-l-4 border-l-primary pl-4 py-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  {getTypeIcon(event.type)}
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`text-xs ${getTypeColor(event.type)}`}
+                                  >
+                                    {event.category}
+                                  </Badge>
+                                  {event.recurring && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      Regelmässig
+                                    </Badge>
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-gray-900 mb-1">
+                                  {event.title}
+                                </h4>
+                                {event.description && (
+                                  <p className="text-sm text-gray-600 mb-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-3 w-3" />
+                                    {event.time}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" />
+                                    {event.location}
+                                  </div>
+                                  {event.contact && (
+                                    <div className="flex items-center gap-1">
+                                      <Users className="h-3 w-3" />
+                                      {event.contact}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
 
+          <TabsContent value="event" className="mt-4">
+            <div className="space-y-4">
+              {/* Events List */}
+              {Object.keys(eventsByDate).length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Keine Termine für diesen Zeitraum gefunden.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(eventsByDate).map(([date, dayEvents]) => (
+                    <div key={date} className="border border-gray-200 rounded-lg p-4 bg-white">
+                      <h3 className="font-semibold text-lg mb-3 text-gray-900 flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-primary" />
+                        {formatFullDate(date)}
+                        <Badge variant="outline" className="ml-auto">
+                          {dayEvents.length} Termin{dayEvents.length !== 1 ? 'e' : ''}
+                        </Badge>
+                      </h3>
+                      
+                      <div className="space-y-3">
+                        {dayEvents.map((event) => (
+                          <div key={event.id} className="border-l-4 border-l-primary pl-4 py-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  {getTypeIcon(event.type)}
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`text-xs ${getTypeColor(event.type)}`}
+                                  >
+                                    {event.category}
+                                  </Badge>
+                                  {event.recurring && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      Regelmässig
+                                    </Badge>
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-gray-900 mb-1">
+                                  {event.title}
+                                </h4>
+                                {event.description && (
+                                  <p className="text-sm text-gray-600 mb-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-3 w-3" />
+                                    {event.time}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" />
+                                    {event.location}
+                                  </div>
+                                  {event.contact && (
+                                    <div className="flex items-center gap-1">
+                                      <Users className="h-3 w-3" />
+                                      {event.contact}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="sport" className="mt-4">
+            <div className="space-y-4">
+              {/* Events List */}
+              {Object.keys(eventsByDate).length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Keine Termine für diesen Zeitraum gefunden.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(eventsByDate).map(([date, dayEvents]) => (
+                    <div key={date} className="border border-gray-200 rounded-lg p-4 bg-white">
+                      <h3 className="font-semibold text-lg mb-3 text-gray-900 flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-primary" />
+                        {formatFullDate(date)}
+                        <Badge variant="outline" className="ml-auto">
+                          {dayEvents.length} Termin{dayEvents.length !== 1 ? 'e' : ''}
+                        </Badge>
+                      </h3>
+                      
+                      <div className="space-y-3">
+                        {dayEvents.map((event) => (
+                          <div key={event.id} className="border-l-4 border-l-primary pl-4 py-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  {getTypeIcon(event.type)}
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`text-xs ${getTypeColor(event.type)}`}
+                                  >
+                                    {event.category}
+                                  </Badge>
+                                  {event.recurring && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      Regelmässig
+                                    </Badge>
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-gray-900 mb-1">
+                                  {event.title}
+                                </h4>
+                                {event.description && (
+                                  <p className="text-sm text-gray-600 mb-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-3 w-3" />
+                                    {event.time}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" />
+                                    {event.location}
+                                  </div>
+                                  {event.contact && (
+                                    <div className="flex items-center gap-1">
+                                      <Users className="h-3 w-3" />
+                                      {event.contact}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="garbage" className="mt-4">
+            <div className="space-y-4">
+              {/* Events List */}
+              {Object.keys(eventsByDate).length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Keine Termine für diesen Zeitraum gefunden.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(eventsByDate).map(([date, dayEvents]) => (
+                    <div key={date} className="border border-gray-200 rounded-lg p-4 bg-white">
+                      <h3 className="font-semibold text-lg mb-3 text-gray-900 flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-primary" />
+                        {formatFullDate(date)}
+                        <Badge variant="outline" className="ml-auto">
+                          {dayEvents.length} Termin{dayEvents.length !== 1 ? 'e' : ''}
+                        </Badge>
+                      </h3>
+                      
+                      <div className="space-y-3">
+                        {dayEvents.map((event) => (
+                          <div key={event.id} className="border-l-4 border-l-primary pl-4 py-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  {getTypeIcon(event.type)}
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`text-xs ${getTypeColor(event.type)}`}
+                                  >
+                                    {event.category}
+                                  </Badge>
+                                  {event.recurring && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      Regelmässig
+                                    </Badge>
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-gray-900 mb-1">
+                                  {event.title}
+                                </h4>
+                                {event.description && (
+                                  <p className="text-sm text-gray-600 mb-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-3 w-3" />
+                                    {event.time}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" />
+                                    {event.location}
+                                  </div>
+                                  {event.contact && (
+                                    <div className="flex items-center gap-1">
+                                      <Users className="h-3 w-3" />
+                                      {event.contact}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="service" className="mt-4">
+            <div className="space-y-4">
               {/* Events List */}
               {Object.keys(eventsByDate).length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
