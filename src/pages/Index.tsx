@@ -15,6 +15,12 @@ interface Article {
   title: string;
   content: string;
   isLead?: boolean;
+  images?: string[];
+  location?: string;
+  locationAddress?: string;
+  pullQuote?: string;
+  pullQuoteAuthor?: string;
+  enableComments?: boolean;
 }
 
 const Index = () => {
@@ -65,6 +71,10 @@ const Index = () => {
 
 In seiner Dankesrede drückte Knüsel seine Freude und seinen Optimismus für die Zukunft der Gemeinde aus. "Ich freue mich, dieses ehrenvolle Amt zum Jahreswechsel antreten zu dürfen und bin frohen Mutes für die Zukunft von Küttigen", so der neugewählte Präsident. Seine erste Amtshandlung wird die Begrüssung der Bürgerinnen und Bürger am traditionellen Neujahrsapéro im Küttiger Spittel sein, zu der er bereits jetzt herzlich einlädt.`,
       isLead: true,
+      images: ["https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=800&h=500&fit=crop"],
+      pullQuote: "Ich freue mich, dieses ehrenvolle Amt zum Jahreswechsel antreten zu dürfen und bin frohen Mutes für die Zukunft von Küttigen",
+      pullQuoteAuthor: "Markus Knüsel, neugewählter Gemeindepräsident",
+      enableComments: true,
     },
     {
       id: "kindergarten-einweihung",
@@ -74,6 +84,10 @@ In seiner Dankesrede drückte Knüsel seine Freude und seinen Optimismus für di
       content: `Nach rund einem Jahr Bauzeit ist es so weit: Der neue Mehrfachkindergarten mit integrierter Tagesstruktur auf dem Stock-Areal konnte nach den Sommerferien erfolgreich in Betrieb genommen werden. Nun lädt der Gemeinderat die gesamte Bevölkerung zur offiziellen Einweihungsfeier ein.
 
 Am Samstag, 25. Oktober 2025, haben alle Interessierten von 10.00 bis 15.00 Uhr die Möglichkeit, den modernen Holzbau aus heimischen Wäldern zu besichtigen. Die offizielle Feier mit musikalischer Begleitung und einer kleinen Verpflegung findet um 11.00 Uhr statt. Ein attraktives Rahmenprogramm für Gross und Klein rundet den Tag ab.`,
+      images: ["https://images.unsplash.com/photo-1587049352846-4a222e784422?w=800&h=500&fit=crop", "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=500&fit=crop"],
+      location: "Kindergarten Storchennest",
+      locationAddress: "Stock-Areal, Küttigen",
+      enableComments: true,
     },
     {
       id: "sporthalle-name",
@@ -124,6 +138,9 @@ Schwerpunkte sind das Strassenbauprojekt inklusive der Sanierung der Bushalteste
       categoryGroup: "politik",
       title: "Feuerwehr-Hauptübung am 17. Oktober",
       content: `Die Feuerwehr Küttigen lädt die Bevölkerung herzlich zur diesjährigen Hauptübung ein. Diese findet am Freitag, 17. Oktober 2025, von 19.00 bis 20.00 Uhr beim Gewerbehaus Wehrli Holzbau an der Hauptstrasse 51 statt. Demonstriert wird die Bewältigung eines Brandereignisses mit Personenrettung. Die Angehörigen der Feuerwehr freuen sich auf zahlreiche Zuschauer.`,
+      images: ["https://images.unsplash.com/photo-1583445095369-9c651e7e5d34?w=800&h=500&fit=crop"],
+      location: "Gewerbehaus Wehrli Holzbau",
+      locationAddress: "Hauptstrasse 51, Küttigen",
     },
     {
       id: "landfraue-erntedank",
@@ -140,6 +157,9 @@ Ein Highlight ist der traditionelle "Chüttiger Rüeblimärt" am Samstag, 1. Nov
       categoryGroup: "sport",
       title: "Schützen laden zum Wildessen",
       content: `Die Schützengesellschaft Densbüren Asp lädt am Wochenende vom 25. und 26. Oktober zum traditionellen Wildessen ins Schützenhaus Büelhalde ein. Serviert werden Köstlichkeiten wie Rehpfeffer und Wildsauragout mit Beilagen. Geöffnet ist am Samstag von 8.00 bis 22.00 Uhr und am Sonntag von 11.00 bis 14.00 Uhr.`,
+      images: ["https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=500&fit=crop"],
+      location: "Schützenhaus Büelhalde",
+      locationAddress: "Densbüren Asp",
     },
     {
       id: "raclette-singwerkstatt",
