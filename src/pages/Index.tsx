@@ -6,6 +6,8 @@ import { EventsList } from "@/components/EventsList";
 import { ArticleNav } from "@/components/ArticleNav";
 import { ReadFilter } from "@/components/ReadFilter";
 import { UpToDateMessage } from "@/components/UpToDateMessage";
+import { CommunityPolls } from "@/components/CommunityPolls";
+import { AdvancedEventCalendar } from "@/components/AdvancedEventCalendar";
 import { Separator } from "@/components/ui/separator";
 
 interface Article {
@@ -365,28 +367,14 @@ Die Katholische Pfarrei Peter und Paul lädt regelmässig zu Wortgottesdiensten 
 
               {/* Sidebar */}
               <aside className="space-y-8">
+                <CommunityPolls />
+                
+                <AdvancedEventCalendar />
+
                 <EventsList events={upcomingEvents} />
 
                 <div className="bg-card p-6 rounded-lg border border-border">
-                  <h3 className="font-bold text-xl mb-4 text-primary">Entsorgung & Sammlungen</h3>
-                  <div className="space-y-3 text-sm">
-                    <div>
-                      <div className="font-semibold">Papiersammlung</div>
-                      <div className="text-muted-foreground">Samstag, 18. Oktober - Bereitstellung bis 7.30 Uhr</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold">Altmetall-Sammlung</div>
-                      <div className="text-muted-foreground">Mittwoch, 22. Oktober - An Kehrichtabfuhr-Route</div>
-                    </div>
-                    <div>
-                      <div className="font-semibold">Pop-up-Recycling</div>
-                      <div className="text-muted-foreground">Samstag, 25. Oktober, 8.30-11.30 Uhr - Parkplatz Sandfelsen</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-card p-6 rounded-lg border border-border">
-                  <h3 className="font-bold text-xl mb-4 text-primary">Sportangebote</h3>
+                  <h3 className="font-bold text-xl mb-4 text-primary">Regelmässige Sportangebote</h3>
                   <div className="space-y-3 text-sm">
                     <div>
                       <div className="font-semibold">Männerriege Küttigen</div>
@@ -400,15 +388,19 @@ Die Katholische Pfarrei Peter und Paul lädt regelmässig zu Wortgottesdiensten 
                       <div className="font-semibold">Pro Senectute Fitness</div>
                       <div className="text-muted-foreground">Donnerstag 14.45 Uhr - Turnhalle Stock</div>
                     </div>
+                    <div>
+                      <div className="font-semibold">SingWerkstatt Küttigen</div>
+                      <div className="text-muted-foreground">Mittwoch 20.00 Uhr - Spittelsaal</div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="bg-card p-6 rounded-lg border border-border">
-                  <h3 className="font-bold text-xl mb-4 text-primary">Service</h3>
+                  <h3 className="font-bold text-xl mb-4 text-primary">Kontakte & Service</h3>
                   <div className="space-y-3 text-sm">
                     <div>
-                      <div className="font-semibold">Rechtsauskunft</div>
-                      <div className="text-muted-foreground">Dienstag, 21. Okt., 19-20 Uhr - Gemeindehaus</div>
+                      <div className="font-semibold">Gemeindeverwaltung</div>
+                      <div className="text-muted-foreground">062 836 10 10</div>
                     </div>
                     <div>
                       <div className="font-semibold">Fachstelle Alter</div>
@@ -417,6 +409,10 @@ Die Katholische Pfarrei Peter und Paul lädt regelmässig zu Wortgottesdiensten 
                     <div>
                       <div className="font-semibold">Fahrdienst</div>
                       <div className="text-muted-foreground">Maja Kaufmann: 079 156 81 55</div>
+                    </div>
+                    <div>
+                      <div className="font-semibold">Notruf</div>
+                      <div className="text-muted-foreground">Polizei: 117, Feuerwehr: 118</div>
                     </div>
                   </div>
                 </div>
