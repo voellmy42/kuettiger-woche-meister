@@ -40,32 +40,17 @@ const defaultPolls: Poll[] = [
     category: "Infrastruktur"
   },
   {
-    id: "christmas-market-2024",
-    question: "Wo soll der Weihnachtsmarkt 2024 stattfinden?",
+    id: "30er-zone",
+    question: "Soll im Dorf 30er Zone generell gültig sein?",
     options: [
-      { id: "downtown", text: "Im Dorfzentrum", votes: 28 },
-      { id: "spittel", text: "Beim Spittel", votes: 19 },
-      { id: "stock", text: "Im Stock-Areal", votes: 15 },
-      { id: "multiple", text: "An mehreren Orten", votes: 8 },
+      { id: "yes", text: "Ja", votes: 28 },
+      { id: "no", text: "Nein", votes: 19 },
     ],
     totalVotes: 70,
     isActive: true,
     endDate: "2024-11-15",
     category: "Veranstaltungen"
   },
-  {
-    id: "library-hours",
-    question: "Sollte die Bibliothek auch am Wochenende geöffnet haben?",
-    options: [
-      { id: "yes-weekend", text: "Ja, Samstag wäre super", votes: 34 },
-      { id: "no-weekend", text: "Nein, die aktuellen Zeiten sind gut", votes: 12 },
-      { id: "sunday-only", text: "Nur am Sonntag", votes: 8 },
-    ],
-    totalVotes: 54,
-    isActive: true,
-    endDate: "2024-11-20",
-    category: "Service"
-  }
 ];
 
 export const CommunityPolls = ({ polls = defaultPolls }: CommunityPollsProps) => {
